@@ -7,6 +7,7 @@ from .serializers import ProductSerializer, ProductReadSerializer, \
                          PenSerializer, PencilSerializer, PaperSerializer
 from .models import Product
 
+
 class ProductListView (APIView):
     """
     View to list all products or paginated list of products,
@@ -53,7 +54,7 @@ class ProductListView (APIView):
         """
         data = request.data.copy()
         variant = 0
-        #Проверяем шаблон
+        # Проверяем шаблон
         if data.get('color', False) and data.get('type', False):
             variant = 1
         elif data.get('color', False) and data.get('hardness', False):
@@ -65,7 +66,7 @@ class ProductListView (APIView):
             product_serializer = ProductSerializer(data=data)
             if product_serializer.is_valid():
                 product_serializer.save()
-                data['product']=product_serializer.data['id']
+                data['product'] = product_serializer.data['id']
                 print(data)
             else:
                 return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -87,6 +88,7 @@ class ProductListView (APIView):
             else:
                 return Response(det_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response('Not all field entered', status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProductDetailView (APIView):
     """
@@ -134,7 +136,7 @@ class ProductDetailView (APIView):
         """
         product = self.get_object(pk)
         data = request.data.copy()
-        data['product']=product.id
+        data['product'] = product.id
         variant = 0
         table = 0
         # Определяем существующую запись
@@ -195,7 +197,7 @@ class ProductDetailView (APIView):
                     product.paperdetail.sheets = data['sheets']
                     product.paperdetail.save()
 
-        #Обновление данных
+        # Обновление данных
         product = self.get_object(pk)
         serializer = ProductReadSerializer(product, data=data)
         if serializer.is_valid():
